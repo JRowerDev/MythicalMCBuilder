@@ -1,5 +1,7 @@
 # Tick
 function tick {
+    #Steel Ingot in world crafting
+    execute as @e[type=item, nbt={OnGround:1b, Item:{id:"minecraft:iron_ingot", Count:1b}}] at @s as @e[type=item, nbt={OnGround:1b, Item:{id:"minecraft:blaze_powder", Count:1b}},limit=1,sort=nearest,distance=0..1] at @s as @e[type=item, nbt={OnGround:1b, Item:{id:"minecraft:coal", Count:1b}},limit=1,sort=nearest,distance=0..1] at @s as @e[type=item, nbt={OnGround:1b, Item:{id:"minecraft:coal", Count:1b}},limit=1,sort=nearest,distance=0..1] run function mythical:give_steel
     #Forge Crafting Check
     execute as @e[tag=forge] at @s run function mythical:forge_recipes
 
@@ -12,7 +14,13 @@ function load {
 }
 
 function give_steel {
-    give @s iron_ingot{display:{Name:'{"text":"Steel Ingot","color":"dark_gray","bold":true}'},steel:1b} 1
+    summon item ~ ~ ~ {Item:{id:"minecraft:iron_ingot",Count:1b, tag:{display:{Name:'{"text":"Steel Ingot"}',Lore:['{"text":"Steel Forged with the heat of the Nether."}']},CustomModelData:123002,steel:1b}}, Tags:["steel"]}
+    execute as @e[tag=steel] at @s run kill @e[type=item, nbt={Item:{id:"minecraft:iron_ingot", Count:1b}}, limit=1]
+    execute as @e[tag=steel] at @s run kill @e[type=item, nbt={Item:{id:"minecraft:blaze_powder", Count:1b}}, limit=1]
+    execute as @e[tag=steel] at @s run kill @e[type=item, nbt={Item:{id:"minecraft:coal", Count:1b}}, limit=2]
+    execute as @e[tag=steel] at @s run playsound minecraft:block.anvil.place master @a ~ ~ ~ 1 1
+    execute as @e[tag=steel] at @s run playsound minecraft:entity.lightning_bolt.impact master @a ~ ~ ~ 1 1
+    execute as @e[tag=steel] at @s run particle minecraft:smoke ~ ~ ~ 0.5 0.5 0.5 0.1 10
 }
 
 function summon {
@@ -29,6 +37,7 @@ function give_forge_cat {
 }
 
 function forge_recipes {
+    # add else execute(if statement) to add more recipes
     execute (if block ~ ~ ~ dropper{Items:[{Slot:0b,id:"minecraft:iron_ingot",Count:1b,tag:{steel:1b}},{Slot:1b,id:"minecraft:netherite_ingot",Count:1b},{Slot:2b,id:"minecraft:iron_ingot",Count:1b,tag:{steel:1b}},{Slot:4b,id:"minecraft:blaze_rod",Count:1b},{Slot:7b,id:"minecraft:blaze_rod",Count:1b}]}) {
         data merge block ~ ~ ~ {Items:[{Slot:4b, id:"minecraft:netherite_pickaxe", Count:1b, tag:{display:{Name:'{"text":"Nether-Forged Pickaxe","color":"dark_aqua","italic":true}'},HideFlags:7,Unbreakable:1b,netherpick:1b,Enchantments:[{id:"minecraft:efficiency",lvl:4s}]}}]}
     }
